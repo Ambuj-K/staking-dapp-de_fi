@@ -6,12 +6,41 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 contract Staking {
     // Staking token used by the app
     IERC20 public s_stakingToken;
-
     // mapping address to tokens staked
-    mapping (address => uint256) public s_balances;
+    mapping (address => uint256) internal s_balances;
+    // mapping address to reward tokens already paid
+    mapping (address => uint256) internal s_userRewardAmountPaid;
+
+    // reward rate per second is 100
+    uint256 public constant REWARD_RATE = 100;
 
     // redundant token count in the contract, for calculating rewards
     uint256 internal s_totalSupply;
+
+    // reward per token storage variable
+    uint256 internal s_rewardPerTokenStored;
+
+    // last updated timestamp for reward calculation logic
+    uint256 internal s_lastUpdatedTimestamp;
+
+    // modifier for reward per token and associated calculation
+    modifier updateReward (address account) {
+        s_rewardPerTokenStored = rewardPerToken();
+        s_lastUpdatedTimestamp = block.timestamp;
+    }
+
+    // latest snapshot based calculation 
+    function rewardPerToken() public view returns (uint256) {
+        if (s_totalSupply == 0){
+            return s_rewardPerTokenStored;
+        }
+        returm s_rewardPerTokenStored + (((block.timestamp - s_lastUpdatedTimestamp) * REWARD_RATE * 1e18) / s_totalSupply);
+    }
+
+    function earned(address account) public view returns (uint256){
+        uint256 currentBalance = s_balances[account];
+        // paid already
+    }
 
     // TODO: Intertoken feasible, chainlink
     constructor (address stakingToken){
@@ -61,6 +90,10 @@ contract Staking {
         // event success emitted
         emit WithdrawSuccess(msg.sender, amount);
          
+    }
+
+    function claimReward() external {
+
     }
 
 }

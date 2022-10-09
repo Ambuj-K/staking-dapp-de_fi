@@ -11,12 +11,12 @@ contract StakingTest is DSTest {
         st = new Staking(addr);
     }
 
-    function testStaking() public{
-        st.staking(2 ether);
+    function testStake() public{
+        st.stake(.4 ether);
     }
 
     function testWithDraw() public{
-        st.withdraw();
+        st.withdraw(.2 ether);
     }
 
     function testReward() public{
