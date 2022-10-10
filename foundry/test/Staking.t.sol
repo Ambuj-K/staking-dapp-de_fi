@@ -19,8 +19,8 @@ contract StakingTest is DSTest {
         st.withdraw(.2 ether);
     }
 
-    function testReward() public{
-
+    function testclaimReward() public{
+        st.claimReward();
     }
 
     fallback() external payable {}
