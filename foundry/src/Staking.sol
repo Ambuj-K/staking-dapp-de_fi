@@ -51,6 +51,7 @@ contract Staking {
         _;
     }
 
+    // modifier to check for zero amounts staked/withdrawn
     modifier checkZero (uint256 amount) {
         if (amount == 0) {
             revert Staking_AmountNotEnough();
@@ -65,11 +66,12 @@ contract Staking {
         uint256 amountPaid = s_userRewardPerTokenPaid[account];
         uint256 currentRewardPerToken = rewardPerToken();
         uint256 pastRewards = s_rewards[account]; 
+        // calculate earned balance
         uint256 earned_bal = pastRewards + ((currentBalance * (currentRewardPerToken - amountPaid))/1e18);
         return earned_bal;
     }
 
-    // helper function latest snapshot based calculation 
+    // helper function latest snapshot based calculation of reward per token
     function rewardPerToken() public view returns (uint256) {
         if (s_totalSupply == 0){
             return s_rewardPerTokenStored;
@@ -102,6 +104,7 @@ contract Staking {
 
     }
 
+    // withdraw token to contract
     function withdraw(uint256 amount) external updateReward(msg.sender) checkZero(amount) {        
         //updating the mapping for the tokens staked count reduction
         s_balances[msg.sender] = s_balances[msg.sender] - amount;
@@ -120,8 +123,10 @@ contract Staking {
          
     }
 
+    // claim reward 
     function claimReward() external updateReward(msg.sender) {
 
+        // get rewards from what is calculated by updateReward modifier
         uint256 reward = s_rewards[msg.sender];
         bool success = s_rewardsToken.transfer(msg.sender, reward);
         if (!success){

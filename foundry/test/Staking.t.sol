@@ -8,7 +8,7 @@ contract StakingTest is DSTest {
     Staking public st;
     function setUp() public {
         address addr = 0x1234567890123456789012345678901234567890;
-        st = new Staking(addr);
+        st = new Staking(addr, addr);
     }
 
     function testStake() public{
