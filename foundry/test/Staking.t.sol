@@ -20,6 +20,7 @@ contract StakingTest is DSTest {
     }
 
     function testclaimReward() public{
+        
         st.claimReward();
     }
 
