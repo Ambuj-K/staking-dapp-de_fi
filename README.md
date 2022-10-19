@@ -3,5 +3,7 @@ End to end staking application using Coinswitch token exchange and Synthetix rew
 
 
 Frontend - WIP
+
 Smart Contracts - Minor Chnages left
-Tests - Minor chnages left
+
+Tests - Minor changes left
