@@ -6,7 +6,7 @@ import "../src/Staking.sol";
 import "../src/RewardToken.sol";
 
 interface CheatCodes {
-    // Skip forward block.timestamp
+    // Warp time
     function warp(uint256) external;
     // Set block.number
     function roll(uint256) external;
@@ -40,12 +40,34 @@ contract StakingTest is DSTest {
         assertEq(end_earned,8639900);
     }
 
+    // test withdraw function
     function testWithDraw() public{
-        st.withdraw(.2 ether);
+        emit log_uint(staking_amt);
+        token.approve(address(st), staking_amt);
+        st.stake(staking_amt);
+        cheats.warp(1 days);
+        cheats.roll(block.number+1);
+        uint256 start_balance = token.balanceOf(address(this));
+        st.withdraw(staking_amt);
+        uint256 end_balance = token.balanceOf(address(this));
+        uint256 earned = st.earned(address(this));
+        emit log_uint(end_balance);
+        assertEq(earned,8639900);
+        assertEq(start_balance+staking_amt,end_balance);
     }
 
-    function testclaimReward() public{        
+    // test claim function
+    function testclaimReward() public{    
+        emit log_uint(staking_amt);
+        token.approve(address(st), staking_amt);
+        st.stake(staking_amt);
+        cheats.warp(1 days);
+        cheats.roll(block.number+1);
+        uint256 earned = st.earned(address(this));
+        uint256 start_balance = token.balanceOf(address(this));    
         st.claimReward();
+        uint256 end_balance = token.balanceOf(address(this));
+        assertEq(start_balance+earned,end_balance);
     }
 
     fallback() external payable {}
