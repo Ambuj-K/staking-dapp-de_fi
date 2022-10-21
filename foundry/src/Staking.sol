@@ -87,7 +87,7 @@ contract Staking is ReentrancyGuard {
     }
 
     // transfer token to contract 
-    function stake(uint256 amount) external updateReward(msg.sender) checkZero(amount) {
+    function stake(uint256 amount) external updateReward(msg.sender) checkZero(amount) nonReentrant {
         //updating the mapping for the tokens staked count addition
         s_balances[msg.sender] = s_balances[msg.sender] + amount;
         s_totalSupply = s_totalSupply + amount;
@@ -106,7 +106,7 @@ contract Staking is ReentrancyGuard {
     }
 
     // withdraw token to contract
-    function withdraw(uint256 amount) external updateReward(msg.sender) checkZero(amount) {        
+    function withdraw(uint256 amount) external updateReward(msg.sender) checkZero(amount) nonReentrant {
         //updating the mapping for the tokens staked count reduction
         s_balances[msg.sender] = s_balances[msg.sender] - amount;
         s_totalSupply = s_totalSupply - amount;
@@ -125,7 +125,7 @@ contract Staking is ReentrancyGuard {
     }
 
     // claim reward 
-    function claimReward() external updateReward(msg.sender) {
+    function claimReward() external updateReward(msg.sender) nonReentrant {
 
         // get rewards from what is calculated by updateReward modifier
         uint256 reward = s_rewards[msg.sender];
