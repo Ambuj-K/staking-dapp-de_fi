@@ -2,8 +2,9 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract Staking {
+contract Staking is ReentrancyGuard {
     // Staking token used by the app
     IERC20 public s_stakingToken;
     // Reward token used by the app
